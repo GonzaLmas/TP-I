@@ -1,4 +1,4 @@
-import gestion_de_agenda.functions as f
+import agenda_management.functions as f
 
 def main():
     # Lista para almacenar todos los contactos 
