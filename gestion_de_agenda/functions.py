@@ -1,9 +1,6 @@
 from datetime import datetime
 
 def show_menu():
-    """
-    Muestra el menú principal del sistema
-    """
     print("\n" + "="*50)
     print("    SISTEMA DE AGENDA")
     print("="*50)
@@ -17,34 +14,17 @@ def show_menu():
     print("="*50)
 
 def validate_email(email):
-    """
-    Valida que el email tenga un formato básico correcto
-    Args:
-        email (str): Email a validar
-    Returns:
-        bool: True si es válido, False si no
-    """
+    # Valida que el email tenga un formato básico correcto
     return "@" in email and "." in email.split("@")[-1]
 
 def validate_phone(phone):
-    """
-    Valida que el teléfono contenga solo números y espacios/guiones
-    Args:
-        telefono (str): Teléfono a validar
-    Returns:
-        bool: True si es válido, False si no
-    """
+   # Valida que el teléfono contenga solo números y espacios/guiones
     valid_characters = "0123456789 -+()"
+    
     return all(c in valid_characters for c in phone) and len(phone.strip()) >= 7
 
 def validate_date(date_str):
-    """
-    Valida que la fecha tenga formato DD/MM/YYYY
-    Args:
-        fecha_str (str): Fecha en formato string
-    Returns:
-        bool: True si es válida, False si no
-    """
+   # Valida que la fecha tenga formato DD/MM/YYYY
     try:
         datetime.strptime(date_str, "%d/%m/%Y")
         return True
@@ -52,73 +32,47 @@ def validate_date(date_str):
         return False
 
 def create_contact():
-    """
-    Crea un nuevo contacto solicitando datos al usuario
-    Returns:
-        dict: Diccionario con los datos del contacto
-    """
+    # Crea un nuevo contacto solicitando datos al usuario
     print("\n--- AGREGAR NUEVO CONTACTO ---")
     
-    # Solicitar nombre (obligatorio)
     while True:
         name = input("Nombre completo: ").strip()
         if name:
             break
-        print("❌ El nombre es obligatorio.")
+        print("El nombre es obligatorio.")
     
-    # Solicitar teléfono con validación
     while True:
         phone = input("Teléfono: ").strip()
         if not phone:
             break
         if validate_phone(phone):
             break
-        print("❌ Formato de teléfono inválido. Use números, espacios, guiones o paréntesis.")
+        print("Formato de teléfono inválido. Use números, espacios, guiones o paréntesis.")
     
-    # Solicitar email con validación
     while True:
         email = input("Email: ").strip().lower()
         if not email:
             break
         if validate_email(email):
             break
-        print("❌ Formato de email inválido.")
+        print("Formato de email inválido.")
     
-    # Solicitar categoría
     print("\nCategorías disponibles:")
+    
     categories = ["familia", "trabajo", "amigos", "otros"]
     for i, cat in enumerate(categories, 1):
         print(f"{i}. {cat.title()}")
     
     while True:
         try:
-            option = input("Seleccione categoría (1-4) o escriba una nueva: ").strip()
+            option = input("Seleccione categoría (1-4): ").strip()
             if option.isdigit() and 1 <= int(option) <= 4:
                 category = categories[int(option) - 1]
                 break
-            elif option:
-                category = option.lower()
-                break
             else:
-                category = "otros"
                 break
         except:
-            print("❌ Opción inválida.")
-    
-    # Solicitar fecha de cumpleaños
-    while True:
-        birthday = input("Fecha de cumpleaños (DD/MM/YYYY) [opcional]: ").strip()
-        if not birthday:
-            break
-        if validate_date(birthday):
-            break
-        print("❌ Formato de fecha inválido. Use DD/MM/YYYY.")
-    
-    # Dirección (opcional)
-    direccion = input("Dirección [opcional]: ").strip()
-    
-    # Notas adicionales (opcional)
-    notas = input("Notas adicionales [opcional]: ").strip()
+            print("Opción inválida.")
     
     # Crear diccionario del contacto
     contact = {
@@ -131,36 +85,27 @@ def create_contact():
     return contact
 
 def show_contact(contact):
-    """
-    Muestra un contacto con formato organizado
-    Args:
-        contacto (dict): Datos del contacto
-        mostrar_fecha_creacion (bool): Si mostrar la fecha de creación
-    """
+    # Muestra un contacto con formato organizado
     print("\n" + "-"*40)
-    print(f"👤 Nombre: {contact['nombre']}")
+    print(f"Nombre: {contact['nombre']}")
     
     if contact['telefono']:
-        print(f"📞 Teléfono: {contact['telefono']}")
+        print(f"Teléfono: {contact['telefono']}")
     
     if contact['email']:
-        print(f"📧 Email: {contact['email']}")
+        print(f"Email: {contact['email']}")
     
-    print(f"🏷️  Categoría: {contact['categoria'].title()}")
+    print(f"Categoría: {contact['categoria'].title()}")
     
     print("-"*40)
 
 def show_all_contacts(contacts):
-    """
-    Muestra todos los contactos de forma resumida
-    Args:
-        contactos (list): Lista de contactos
-    """
+    # Muestra todos los contactos
     if not contacts:
-        print("\n❌ No hay contactos registrados.")
+        print("\nNo hay contactos registrados.")
         return
     
-    print(f"\n📖 TODOS LOS CONTACTOS ({len(contacts)} total)")
+    print(f"\nTODOS LOS CONTACTOS ({len(contacts)} total)")
     print("="*60)
     
     # Ordenar por nombre
@@ -169,22 +114,15 @@ def show_all_contacts(contacts):
     for i, contact in enumerate(sorted_contacts, 1):
         phone = f" - {contact['telefono']}" if contact['telefono'] else ""
         category = f" [{contact['categoria'].title()}]"
+        
         print(f"{i:2d}. {contact['nombre']}{phone}{category}")
 
 def find_contacts(contacts, field):
-    """
-    Busca contactos por nombre, teléfono o email
-    Args:
-        contactos (list): Lista de contactos
-        termino_busqueda (str): Término a buscar
-    Returns:
-        list: Lista de contactos que coinciden
-    """
+    # Busca contactos por nombre, teléfono o email
     field = field.lower().strip()
     results = []
     
     for contact in contacts:
-        # Buscar en nombre, teléfono y email
         if (field in contact['nombre'].lower() or 
             field in contact['telefono'].lower() or 
             field in contact['email'].lower()):
@@ -193,24 +131,11 @@ def find_contacts(contacts, field):
     return results
 
 def find_by_category(contacts, category):
-    """
-    Busca contactos por categoría
-    Args:
-        contactos (list): Lista de contactos
-        categoria (str): Categoría a buscar
-    Returns:
-        list: Lista de contactos de esa categoría
-    """
+    # Busca contactos por categoría
     return [c for c in contacts if c['categoria'].lower() == category.lower()]
 
 def edit_contact(contact):
-    """
-    Permite editar un contacto existente
-    Args:
-        contacto (dict): Contacto a editar
-    Returns:
-        bool: True si se editó, False si se canceló
-    """
+    # Permite editar un contacto existente
     print(f"\n--- EDITANDO: {contact['nombre']} ---")
     print("Presione Enter para mantener el valor actual")
     
@@ -227,7 +152,7 @@ def edit_contact(contact):
         if validate_phone(new_phone):
             contact['telefono'] = new_phone
             break
-        print("❌ Formato de teléfono inválido.")
+        print("Formato de teléfono inválido.")
     
     # Editar email
     while True:
@@ -237,12 +162,12 @@ def edit_contact(contact):
         if validate_email(new_email):
             contact['email'] = new_email
             break
-        print("❌ Formato de email inválido.")
+        print("Formato de email inválido.")
     
     # Editar categoría
     new_category = input(f"Categoría [{contact['categoria']}]: ").strip().lower()
     if new_category:
         contact['categoria'] = new_category
     
-    print("✅ Contacto editado exitosamente.")
+    print("Contacto editado exitosamente.")
     return True
