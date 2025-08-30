@@ -19,8 +19,10 @@ def main():
             match option:
                 case "1":
                     print("\nAGREGAR CONTACTO")
+                    
                     new_contact = f.create_contact()
                     contacts.append(new_contact)
+                    
                     print(f"Contacto '{new_contact[cons.NOMBRE]}' agregado exitosamente.")
 
                     while True:
@@ -28,6 +30,7 @@ def main():
                         if another_contact == 's':
                             new_contact = f.create_contact()
                             contacts.append(new_contact)
+                            
                             print(f"Contacto '{new_contact[cons.NOMBRE]}' agregado exitosamente.")
                         elif another_contact == 'n':
                             break
@@ -37,10 +40,10 @@ def main():
                 case "2":
                     print("\nMOSTRAR TODOS LOS CONTACTOS")
                     f.show_all_contacts(contacts)
-                   
 
                 case "3":
                     print("\n🔍 BUSCAR CONTACTO")
+                    
                     if not contacts:
                         print("No hay contactos para buscar.")
                         continue
@@ -61,11 +64,13 @@ def main():
 
                 case "4":
                     print("\nEDITAR CONTACTO")
+                    
                     if not contacts:
                         print("No hay contactos para editar.")
                         continue
 
                     f.show_all_contacts(contacts)
+                    
                     field = input("\nIngrese nombre del contacto a editar: ").strip()
                     if not field:
                         print("Debe ingresar un nombre.")
@@ -80,24 +85,29 @@ def main():
                         f.edit_contact(results[0])
                     else:
                         print(f"\nSe encontraron {len(results)} contactos:")
+                        
                         for i, contact in enumerate(results, 1):
                             print(f"{i}. {contact[cons.NOMBRE]}")
+                            
                         try:
                             contact_index = int(input("Seleccione el número del contacto a editar: ")) - 1
                             if 0 <= contact_index < len(results):
                                 f.edit_contact(results[contact_index])
                             else:
                                 print("Selección inválida.")
+                                
                         except ValueError:
                             print("Debe ingresar un número válido.")
 
                 case "5":
                     print("\nELIMINAR CONTACTO")
+                    
                     if not contacts:
                         print("No hay contactos para eliminar.")
                         continue
 
                     f.show_all_contacts(contacts)
+                    
                     field = input("\nIngrese nombre del contacto a eliminar: ").strip()
                     if not field:
                         print("Debe ingresar un nombre.")
@@ -124,6 +134,7 @@ def main():
                             else:
                                 print("Selección inválida.")
                                 continue
+                            
                         except ValueError:
                             print("Debe ingresar un número válido.")
                             continue
@@ -141,11 +152,13 @@ def main():
 
                 case "6":
                     print("\nBUSCAR POR CATEGORÍA")
+                    
                     if not contacts:
                         print("No hay contactos para buscar.")
                         continue
 
                     categories = set(c[cons.CATEGORIA] for c in contacts)
+                    
                     print("Categorías disponibles:")
                     
                     for i, cat in enumerate(sorted(categories), 1):
@@ -168,6 +181,7 @@ def main():
                 case "7":
                     print("\nGracias por usar el Sistema de Agenda.")
                     print("Hasta luego!")
+                    
                     flag = False
 
                 case _:

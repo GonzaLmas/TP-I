@@ -1,5 +1,4 @@
 from agenda_management import constants as cons
-
 from datetime import datetime
 
 def show_menu():
@@ -17,25 +16,32 @@ def show_menu():
 
 def validate_email(email):
     # Valida que el email tenga un formato correcto
-    return "@" in email and "." in email.split("@")[-1]
+    at_exists = "@" in email
+    dot_after_at_exists = "." in email.split("@")[-1]
+    is_valid = at_exists and dot_after_at_exists
+    
+    return is_valid
 
 def validate_phone(phone):
     valid_characters = cons.AVAILABLE_PHONE_NUMBERS
     
-   # Valida que el teléfono contenga solo números    
-    if not all(c in valid_characters for c in phone):
+    # Valida que el teléfono contenga solo números
+    only_valid_chars = all(c in valid_characters for c in phone)
+    if not only_valid_chars:
         return False
     
-    # Valida que el telefono tenga 10 dígitos
+    # Valida que el teléfono tenga 10 dígitos
     digit_count = sum(c.isdigit() for c in phone)
+    has_correct_length = digit_count == cons.PHONE_LENGHT
     
-    return digit_count == cons.PHONE_LENGHT
+    return has_correct_length
 
 def validate_date(date_str):
    # Valida que la fecha tenga formato DD/MM/YYYY
     try:
         datetime.strptime(date_str, "%d/%m/%Y")
         return True
+    
     except ValueError:
         return False
 
@@ -116,18 +122,22 @@ def show_all_contacts(contacts):
     print(f"\nTODOS LOS CONTACTOS ({len(contacts)} total)")
     print("="*cons.LINE_LENGTH)
     
+    # Ordena de forma ascendente los contactos por su nombre
     sorted_contacts = sorted(contacts, key=lambda x: x[cons.NOMBRE].lower())
     
-    for i, contact in enumerate(sorted_contacts, 1):
-        phone = f" - {contact[cons.TELEFONO]}" if contact[cons.TELEFONO] else ""
-        category = f" [{contact[cons.CATEGORIA].title()}]"
+    for i, contact_name in enumerate(sorted_contacts, 1):
+        contact_phone = f" - {contact_name[cons.TELEFONO]}" if contact_name[cons.TELEFONO] else ""
+        contact_email = f" - {contact_name[cons.EMAIL]}" if contact_name[cons.EMAIL] else ""
+        contact_category = f" [{contact_name[cons.CATEGORIA].title()}]"
         
-        print(f"{i:2d}. {contact[cons.NOMBRE]}{phone}{category}")
+        print(f"{i:2d}. {contact_name[cons.NOMBRE]}{contact_phone}{contact_email}{contact_category}")
 
 def find_contacts(contacts, field):
+    # Parsea el param recibido a minúscula y con strip() sanitiza el input del usuario
     field = field.lower().strip()
     results = []
     
+    # Busca coincidencias en los tres campos
     for contact in contacts:
         if (field == contact[cons.NOMBRE].lower() or 
             field == contact[cons.TELEFONO].lower() or 
@@ -137,7 +147,19 @@ def find_contacts(contacts, field):
     return results
 
 def find_by_category(contacts, category):
-    return [c for c in contacts if c[cons.CATEGORIA].lower() == category.lower()]
+    # Parsea el param recibido a minúscula para sanitizar posibles errores
+    category_lower = category.lower()
+    filtered_contacts = []
+
+    for contact in contacts:
+        # Parsea el param recibido a minúscula para sanitizar posibles errores
+        contact_category = contact[cons.CATEGORIA].lower()
+        
+        # Evalúa la categoría del contacto con la categoría recibida por parámetro
+        if contact_category == category_lower:
+            filtered_contacts.append(contact)
+    
+    return filtered_contacts
 
 def edit_contact(contact):
     print(f"\n--- EDITANDO: {contact[cons.NOMBRE]} ---")
