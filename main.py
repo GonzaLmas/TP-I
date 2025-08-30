@@ -26,7 +26,7 @@ def main():
                     print(f"Contacto '{new_contact[cons.NOMBRE]}' agregado exitosamente.")
 
                     while True:
-                        another_contact = input("\n¿Desea agregar otro contacto? (s/n): ").lower().strip()
+                        another_contact = input("\nDesea agregar otro contacto? (s/n): ").lower().strip()
                         if another_contact == 's':
                             new_contact = f.create_contact()
                             contacts.append(new_contact)
@@ -42,7 +42,7 @@ def main():
                     f.show_all_contacts(contacts)
 
                 case "3":
-                    print("\n🔍 BUSCAR CONTACTO")
+                    print("\nBUSCAR CONTACTO")
                     
                     if not contacts:
                         print("No hay contactos para buscar.")
@@ -142,7 +142,7 @@ def main():
                     print(f"\nEstá a punto de eliminar:")
                     f.show_contact(contact_to_remove)
                     
-                    confirmation = input("¿Está seguro? (s/n): ").lower().strip()
+                    confirmation = input("Está seguro? (s/n): ").lower().strip()
                     
                     if confirmation == 's':
                         contacts.remove(contact_to_remove)
@@ -189,7 +189,7 @@ def main():
 
         except KeyboardInterrupt:
             print("\n\nInterrupción detectada.")
-            exit = input("¿Desea salir del programa? (s/n): ").lower().strip()
+            exit = input("Desea salir del programa? (s/n): ").lower().strip()
             
             if exit == 's':
                 print("Hasta luego!")
